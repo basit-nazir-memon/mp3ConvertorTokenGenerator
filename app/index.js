@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 const app = express();
 const PORT = 3000;
 
-app.get('/get-token', async (req, res) => {
+app.get('/api/get-token', async (req, res) => {
     try {
         const fetch = (await import('node-fetch')).default;
 
