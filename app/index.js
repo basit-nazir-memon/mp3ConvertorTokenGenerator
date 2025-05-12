@@ -1,8 +1,18 @@
 const express = require('express');
 const cheerio = require('cheerio');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Enable CORS for all routes
+app.use(cors());
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({ error: err.message });
+});
 
 app.get('/api/get-token', async (req, res) => {
     try {
@@ -32,10 +42,16 @@ app.get('/api/get-token', async (req, res) => {
         const response = await fetch('https://ytmp3.la/LOF8/', {
             method: 'GET',
             headers: headers,
+            timeout: 10000 // Add timeout of 10 seconds
         });
 
         if (!response.ok) {
             const errorBody = await response.text();
+            console.error('Response error:', {
+                status: response.status,
+                statusText: response.statusText,
+                body: errorBody
+            });
             throw new Error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
         }
 
