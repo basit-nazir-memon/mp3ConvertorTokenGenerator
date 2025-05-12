@@ -2,7 +2,7 @@ const express = require('express');
 const cheerio = require('cheerio');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.get('/api/get-token', async (req, res) => {
     try {
@@ -33,6 +33,11 @@ app.get('/api/get-token', async (req, res) => {
             method: 'GET',
             headers: headers,
         });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
+        }
 
         const html = await response.text();
 
